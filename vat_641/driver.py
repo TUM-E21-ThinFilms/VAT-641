@@ -28,8 +28,7 @@ class VAT641Driver(object):
         self._protocol = protocol
         #super(VAT590Driver, self)._init_(transport, protocol)
 
-        self._remote = ('U:01', String)
-        self._local = ('U:02', String)
+        self._mode = ('U:', String)
 
         self._close = ('C:', String)
         self._open = ('O:', String)
@@ -52,10 +51,10 @@ class VAT641Driver(object):
         cmd.write(self._transport, self._protocol, *datas)
 
     def switch_to_local_mode(self):
-        self._write(self._local, '')
+        self._write(self._mode, '02')
 
     def switch_to_remote_mode(self):
-        self._write(self._remote, '')
+        self._write(self._mode, '01')
 
     def open(self):
         self._write(self._open, '')

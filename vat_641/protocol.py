@@ -38,6 +38,7 @@ class VAT641Protocol(Protocol):
         response = response.decode(self.encoding)
 
         if response.startswith('E:'):
+            self.logger.error("Received error from device: %s", repr(response))
             raise CommunicationError('Received an error from device with id: %s' % response)
 
         if not response.startswith(header):
@@ -84,7 +85,7 @@ class VAT641Protocol(Protocol):
             raise CommunicationError('Received an timeout while sending message')
         try:
             response = self.read_response(transport)
-            return self.parse_response(response)
+            return self.parse_response(response, header)
         except slave.transport.Timeout:
             raise CommunicationError('Received an timeout while receiving response')
 
