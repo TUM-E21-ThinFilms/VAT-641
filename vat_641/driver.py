@@ -32,13 +32,13 @@ class VAT641Driver(object):
 
         self._close = ('C:', String)
         self._open = ('O:', String)
-        self._hold = ('H', String)
+        self._hold = ('H:', String)
         self._zero_adjust = ('Z:', String)
 
         self._interlock = ('U:', String)
         self._speed = ('V:', String)
 
-        self._software_version = ('i:01', String)
+        self._software_version = Command('i:01', 'i:01', String)
 
         self._valve_position = Command('A:', 'R:', String)
 
