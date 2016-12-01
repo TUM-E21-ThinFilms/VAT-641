@@ -17,9 +17,9 @@ import logging
 
 from slave.transport import Serial
 from protocol import VAT641Protocol
-from driver import VAT541Driver
+from driver import VAT641Driver
 
-class VAT541Factory:
+class VAT641Factory:
     def get_logger(self):
         logger = logging.getLogger('VAT 64.1 Series')
         logger.setLevel(logging.DEBUG)
