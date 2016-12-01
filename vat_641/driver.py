@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from slave.driver import Driver, Command
-from slave.types import String, Mapping, BitSequence
+from slave.types import Integer, String, Mapping, BitSequence
 from protocol import VAT641Protocol
 
 class VAT641Driver(object):
