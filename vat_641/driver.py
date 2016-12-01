@@ -33,7 +33,7 @@ class VAT641Driver(object):
         self._close = ('C:', String)
         self._open = ('O:', String)
 
-        self._valve_position = Command('A:', 'R:', Integer)
+        self._valve_position = Command('A:', 'R:', String)
 
     def clear(self):
         self._protocol.clear(self._transport)
@@ -72,7 +72,7 @@ class VAT641Driver(object):
         self._write(self._valve_position, str(position).zfill(6))
 
     def get_valve_position(self):
-        return self._query(self._valve_position)
+        return int(self._query(self._valve_position))
 
     # returns the valve position in percentage: 100 ^= valve fully open, 0 ^= valve completely closed
     def get_open(self):

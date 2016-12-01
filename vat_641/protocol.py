@@ -30,7 +30,7 @@ class VAT641Protocol(Protocol):
     def create_message(self, header, *data):
         msg = []
         msg.append(header)
-        msg.extend(data)
+        msg.append(data)
         msg.append("\r\n")
         return ''.join(msg).encode(self.encoding)
 
@@ -78,7 +78,6 @@ class VAT641Protocol(Protocol):
 
     def write(self, transport, header, *data):
         message = self.create_message(header, *data)
-
         try:
             self.send_message(transport, message)
         except slave.transport.Timeout:
