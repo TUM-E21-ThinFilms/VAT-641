@@ -32,6 +32,13 @@ class VAT641Driver(object):
 
         self._close = ('C:', String)
         self._open = ('O:', String)
+        self._hold = ('H', String)
+        self._zero_adjust = ('Z:', String)
+
+        self._interlock = ('U:', String)
+        self._speed = ('V:', String)
+
+        self._software_version = ('i:01', String)
 
         self._valve_position = Command('A:', 'R:', String)
 
@@ -77,3 +84,27 @@ class VAT641Driver(object):
     # returns the valve position in percentage: 100 ^= valve fully open, 0 ^= valve completely closed
     def get_open(self):
         return self.get_valve_position()/10.0
+
+    def zero_adjust(self):
+        self._write(self._zero_adjust, '')
+
+    def hold(self):
+        self._write(self._hold, '')
+
+    def interlock_keys(self):
+        self._write(self._interlock, '03')
+
+    def release_keys(self):
+        self._write(self._interlock, '04')
+
+    def set_speed(self, speed):
+        if not isinstance(speed, (int, long)):
+            raise TypeError("position must be an integer")
+
+        if speed < 0 or speed > 1000:
+            raise ValueError('position must be in range [0, 1000]')
+
+        self._write(self._speed, str(speed).zfill(6))
+
+    def get_software_version(self):
+        return self._query(self._software_version)

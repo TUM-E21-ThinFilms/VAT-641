@@ -30,7 +30,7 @@ class VAT641Protocol(Protocol):
     def create_message(self, header, *data):
         msg = []
         msg.append(header)
-        msg.append(data)
+        msg.extend(data)
         msg.append("\r\n")
         return ''.join(msg).encode(self.encoding)
 
