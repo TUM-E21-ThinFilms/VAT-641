@@ -34,5 +34,5 @@ class VAT641Factory:
         if logger is None:
             logger = self.get_logger()
 
-        protocol = VAT590Protocol(logger=logger)
-        return VAT590Driver(Serial(device, 4800, 7, 'E', 1, 0.2), protocol)
+        protocol = VAT641Protocol(logger=logger)
+        return VAT641Driver(Serial(device, 4800, 7, 'E', 1, 0.2), protocol)
