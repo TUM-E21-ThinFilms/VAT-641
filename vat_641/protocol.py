@@ -37,7 +37,10 @@ class VAT641Protocol(Protocol):
     def parse_response(self, response, header):
         response = response.decode(self.encoding)
 
-        if not response.startswith(header[0]):
+        if response.startswith('E:'):
+            raise CommunicationError('Received an error from device with id: %s' % response)
+
+        if not response.startswith(header):
             raise CommunicationError('Response header mismatch')
 
         response = response[len(header):]
@@ -81,11 +84,9 @@ class VAT641Protocol(Protocol):
             raise CommunicationError('Received an timeout while sending message')
         try:
             response = self.read_response(transport)
-            if len(response) > 0:
-                self.logger.error('Received Unexpected response data: "%s"', repr(response))
+            return self.parse_response(response)
         except slave.transport.Timeout:
-            pass
-            # thats okay, since we do not want a response anyway.
+            raise CommunicationError('Received an timeout while receiving response')
 
     def clear(self, transport):
         while True:
