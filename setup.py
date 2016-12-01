@@ -18,7 +18,7 @@ from setuptools import setup, find_packages
 
 requires = ['slave']
 
-desc = ('An implementation of the VAT 590 Series')
+desc = ('An implementation of the VAT 641 Series')
 
 setup(
     name='vat_641',
