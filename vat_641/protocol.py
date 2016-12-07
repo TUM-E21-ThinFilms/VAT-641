@@ -18,8 +18,10 @@ import slave
 from slave.protocol import Protocol
 from slave.transport import Timeout
 
-class CommunicationError(Exception):
-    pass
+import e21_util
+from e21_util.lock import InterProcessTransportLock
+from e21_util.error import CommunicationError
+
 
 class VAT641Protocol(Protocol):
 
@@ -63,34 +65,37 @@ class VAT641Protocol(Protocol):
             raise CommunicationError("Could not send data")
 
     def query(self, transport, header, *data):
-        message = self.create_message(header, *data)
-        try:
-            self.send_message(transport, message)
-        except slave.transport.Timeout:
-            raise CommunicationError('Received an timeout while sending message')
+        with InterProcessTransportLock(transport):
+            message = self.create_message(header, *data)
+            try:
+                self.send_message(transport, message)
+            except slave.transport.Timeout:
+                raise CommunicationError('Received an timeout while sending message')
 
-        try:
-            response = self.read_response(transport)
-        except slave.transport.Timeout:
-            raise CommunicationError('Received an timeout while receiving response')
+            try:
+                response = self.read_response(transport)
+            except slave.transport.Timeout:
+                raise CommunicationError('Received an timeout while receiving response')
 
-        return self.parse_response(response, header)
+            return self.parse_response(response, header)
 
     def write(self, transport, header, *data):
-        message = self.create_message(header, *data)
-        try:
-            self.send_message(transport, message)
-        except slave.transport.Timeout:
-            raise CommunicationError('Received an timeout while sending message')
-        try:
-            response = self.read_response(transport)
-            return self.parse_response(response, header)
-        except slave.transport.Timeout:
-            raise CommunicationError('Received an timeout while receiving response')
+        with InterProcessTransportLock(transport):
+            message = self.create_message(header, *data)
+            try:
+                self.send_message(transport, message)
+            except slave.transport.Timeout:
+                raise CommunicationError('Received an timeout while sending message')
+            try:
+                response = self.read_response(transport)
+                return self.parse_response(response, header)
+            except slave.transport.Timeout:
+                raise CommunicationError('Received an timeout while receiving response')
 
     def clear(self, transport):
-        while True:
-            try:
-                transport.read_bytes(25)
-            except Timeout:
-                return True
+        with InterProcessTransportLock(transport):
+            while True:
+                try:
+                    transport.read_bytes(25)
+                except Timeout:
+                    return True
