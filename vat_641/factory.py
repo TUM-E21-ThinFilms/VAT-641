@@ -13,22 +13,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import logging
-
 from e21_util.transport import Serial
+from e21_util.logging import get_sputter_logger
 from protocol import VAT641Protocol
 from driver import VAT641Driver
 
 class VAT641Factory:
     def get_logger(self):
-        logger = logging.getLogger('VAT 64.1 Series')
-        logger.setLevel(logging.DEBUG)
-        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        fh = logging.FileHandler('vat641.log')
-        fh.setLevel(logging.DEBUG)
-        fh.setFormatter(formatter)
-        logger.addHandler(fh)
-        return logger
+        return get_sputter_logger('VAT 64.1 Series', 'vat641.log')
 
     def create_valve(self, device='/dev/ttyUSB4', logger=None):
         if logger is None:
