@@ -94,8 +94,8 @@ class VAT641Driver(object):
     def is_open(self):
         # format: i:05V1:aV2:b
         query = self._query(self._valve_is_open)
-        a = query[7]
-        b = query[11]
+        a = query[3]
+        b = query[7]
         if b == "-":
             return self.VALVE_NOT_CONNECTED
         elif a == "N":
