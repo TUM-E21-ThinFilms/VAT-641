@@ -22,7 +22,6 @@ class VAT641Driver(object):
     VALVE_OPEN = 0
     VALVE_CLOSED = 1
     VALVE_INTERMEDIATE = 2
-    VALVE_NOT_CONNECTED = 4
 
     def __init__(self, transport, protocol=None):
 
@@ -95,14 +94,11 @@ class VAT641Driver(object):
         # format: i:05V1:aV2:b
         query = self._query(self._valve_is_open)
         a = query[3]
-        b = query[7]
-        if b == "-":
-            return self.VALVE_NOT_CONNECTED
-        elif a == "N":
+        if a == "N":
             return self.VALVE_INTERMEDIATE
         elif a == "C":
             return self.VALVE_CLOSED
-        elif a == "0" or a == "O":
+        elif a == "O":
             return self.VALVE_OPEN
 
     def zero_adjust(self):
