@@ -19,6 +19,11 @@ from protocol import VAT641Protocol
 
 class VAT641Driver(object):
 
+    VALVE_OPEN = 0
+    VALVE_CLOSED = 1
+    VALVE_INTERMEDIATE = 2
+    VALVE_NOT_CONNECTED = 4
+
     def __init__(self, transport, protocol=None):
 
         if protocol is None:
@@ -41,6 +46,7 @@ class VAT641Driver(object):
         self._software_version = Command('i:01', 'i:01', String)
 
         self._valve_position = Command('A:', 'R:', String)
+        self._valve_is_open = Command('i:05')
 
     def clear(self):
         self._protocol.clear(self._transport)
@@ -84,6 +90,20 @@ class VAT641Driver(object):
     # returns the valve position in percentage: 100 ^= valve fully open, 0 ^= valve completely closed
     def get_open(self):
         return self.get_valve_position()/10.0
+
+    def is_open(self):
+        # format: i:05V1:aV2:b
+        query = self._query(self._valve_is_open)
+        a = query[7]
+        b = query[11]
+        if b == "-":
+            return self.VALVE_NOT_CONNECTED
+        elif a == "N":
+            return self.VALVE_INTERMEDIATE
+        elif a == "C":
+            return self.VALVE_CLOSED
+        elif a == "0" or a == "O":
+            return self.VALVE_OPEN
 
     def zero_adjust(self):
         self._write(self._zero_adjust, '')
