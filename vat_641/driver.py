@@ -46,7 +46,7 @@ class VAT641Driver(object):
         self._software_version = Command('i:01', 'i:01', String)
 
         self._valve_position = Command('A:', 'R:', String)
-        self._valve_is_open = Command('i:05', String)
+        self._valve_is_open = ('i:05', String)
 
     def clear(self):
         self._protocol.clear(self._transport)
