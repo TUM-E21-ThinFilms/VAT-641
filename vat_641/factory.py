@@ -15,6 +15,7 @@
 
 from e21_util.transport import Serial
 from e21_util.log import get_sputter_logger
+from e21_util.ports import Ports
 from protocol import VAT641Protocol
 from driver import VAT641Driver
 
@@ -22,9 +23,12 @@ class VAT641Factory:
     def get_logger(self):
         return get_sputter_logger('VAT 64.1 Series', 'vat641.log')
 
-    def create_valve(self, device='/dev/ttyUSB4', logger=None):
+    def create_valve(self, device=None, logger=None):
         if logger is None:
             logger = self.get_logger()
+
+        if device is None:
+            device = Ports().get_port(Ports.DEVICE_TURBO_VALVE)
 
         protocol = VAT641Protocol(logger=logger)
         return VAT641Driver(Serial(device, 4800, 7, 'E', 1, 0.2), protocol)
