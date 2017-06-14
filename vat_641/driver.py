@@ -19,8 +19,8 @@ from protocol import VAT641Protocol
 
 class VAT641Driver(object):
 
-    VALVE_OPEN = 0
-    VALVE_CLOSED = 1
+    VALVE_OPEN = 1
+    VALVE_CLOSED = 0
     VALVE_INTERMEDIATE = 2
 
     def __init__(self, transport, protocol=None):
